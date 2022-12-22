@@ -62,12 +62,13 @@ async def end(message):
 async def first_step_want_watch_film(message):
     # Получаем последнее сообщение от пользователя
     all_messages_from_user = get_messages_from_user(message.chat.id)
+    # Формируем последнее сообщение от пользователя
     text_last_message = all_messages_from_user[0][0]
-    # Получаем предпоследнее сообщение от пользователя, если оно есть
+    # Формируем предпоследнее сообщение от пользователя, если оно есть
     if len(all_messages_from_user) > 1:
         text_before_last_message = all_messages_from_user[1][0]
     # Получаем жанры фильмов, которые рекомендовали
-    type_films = check_type_films_in_db_films()
+    type_films_which_recommended = check_type_films_in_db_films()
 
 
     # Сценарий 1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
@@ -121,8 +122,8 @@ async def first_step_want_watch_film(message):
     elif message.text == "Рандом не мой вариант, давай выберем фильм под мои пожелания..." and text_last_message == 'Очень хочу посмотреть фильм!':
         # Формируем кнопки для выдачи пользователю из списка жанров
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        for i in range(0, len(type_films)):
-            markup.add(types.KeyboardButton(type_films[i]))
+        for i in range(0, len(type_films_which_recommended)):
+            markup.add(types.KeyboardButton(type_films_which_recommended[i]))
         # Записываем сообщение от пользователя в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         await message.reply('Фильм какого жанра ты хочешь посмотреть сегодня?', reply_markup=markup)
@@ -142,7 +143,7 @@ async def first_step_want_watch_film(message):
 
     # Сценарий 1.1.2.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя "Рандом не мой вариант, давай выберем фильм под мои пожелания..."
-    elif message.text in type_films and text_last_message == "Рандом не мой вариант, давай выберем фильм под мои пожелания...":
+    elif message.text in type_films_which_recommended and text_last_message == "Рандом не мой вариант, давай выберем фильм под мои пожелания...":
         # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = types.KeyboardButton("Хочу рекомендацию от конкретного пользователя!")
@@ -171,7 +172,7 @@ async def first_step_want_watch_film(message):
 
     # Сценарий 1.1.2.1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение из списка жанров фильмов
-    elif message.text == "Хочу рекомендацию от конкретного пользователя!" and text_last_message in type_films:
+    elif message.text == "Хочу рекомендацию от конкретного пользователя!" and text_last_message in type_films_which_recommended:
         # Формируем кнопки для выдачи пользователю из списка жанров
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         # Получаем список пользователей, которые рекомендавали выбранный жанр
@@ -189,7 +190,7 @@ async def first_step_want_watch_film(message):
 
     # Сценарий 1.1.2.1.1.2 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя 'Очень хочу посмотреть фильм!'
-    elif message.text == "Уверен в каждом из рекомендателей =)" and text_last_message in type_films:
+    elif message.text == "Уверен в каждом из рекомендателей =)" and text_last_message in type_films_which_recommended:
         # Получаем фильм для рекомендации с учетом жанра и реомендующего
         name_film = get_film_with_filter(message.chat.id)
         # Записываем сообщение в базу данных
