@@ -79,12 +79,20 @@ def get_count_string_with_filter(type_film, user_id_recommended=None):
 
 # Проверяем, есть ли жанр в рекомендованных фильмах
 def check_type_films_in_db_films():
+    # Получаем список жанров, которые уже рекомендовали
     type_films_which_recommended = get_type_which_is_recommended()
+    # Создаем пустой список на будущее
     list_type_films = []
+    # Перебираем все жанры
     for type_film in type_films:
+        # Перебираем все жанры, которые уже рекомендовали
         for type_film_from_table_films in type_films_which_recommended:
+            # Проверяем, есть ли жанр в списке рекомендованных
             if type_film in type_film_from_table_films:
-                list_type_films.append(type_film)
+                # Проверяем, есть ли жанр уже в нашем списке, который мы формировали вначале
+                if type_film not in list_type_films:
+                    # Если нет - добавляем его
+                    list_type_films.append(type_film)
     return list_type_films
 
 # Возвращаем информацию о жанрах из таблицы films, которые рекомендовали

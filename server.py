@@ -8,7 +8,7 @@ from fw.actions_with_message import get_film_with_filter
 from fw.db.tables.table_text_message_from_user import write_message_from_user_in_table_with_type_films, write_message_from_user_in_table, get_messages_from_user, delete_all_messages_from_user, delete_last_messages_from_user
 from fw.db.tables.table_films import get_random_film, add_info_about_film_in_table_films, check_type_films_in_db_films
 from fw.db.db_base import get_users_who_recommended_with_correct_type_film
-
+from fw.db.tables.table_users import add_info_about_user_in_table_users
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +21,8 @@ dp = Dispatcher(bot)
 # Функция, обрабатывающая команду /start
 @dp.message_handler(commands=["start"])
 async def start(message):
+    # Записываем пользователя в базу данных users если он пишет впервые
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
     # Формируем кнопки для выдачи пользователю
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Очень хочу посмотреть фильм!")
@@ -35,6 +37,8 @@ async def start(message):
 
 @dp.message_handler(commands=["end"])
 async def end(message):
+    # Записываем пользователя в базу данных users если он пишет впервые
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
     # Получаю время сервера
     time = datetime.datetime.now().strftime("%H")
     # Формирую ответ исходя из времени
@@ -69,7 +73,8 @@ async def first_step_want_watch_film(message):
         text_before_last_message = all_messages_from_user[1][0]
     # Получаем жанры фильмов, которые рекомендовали
     type_films_which_recommended = check_type_films_in_db_films()
-
+    # Записываем пользователя в базу данных users если он пишет впервые
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
 
     # Сценарий 1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя /start
@@ -184,7 +189,7 @@ async def first_step_want_watch_film(message):
         # Записываем сообщение в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Отвечаем пользователю
-        await message.reply('Давай выберем рекомендателя =) \n'
+        await message.reply('Давай выберем рекомендателя из списка =) \n'
                             'НО, если подходящего рекомендателя нет, нажми кнопку:\n'
                             'Подходящего рекомендателя, к сожалению, нет =(', reply_markup=markup)
 
@@ -208,7 +213,6 @@ async def first_step_want_watch_film(message):
     elif message.text != "Подходящего рекомендателя, к сожалению, нет =(" and text_last_message == "Хочу рекомендацию от конкретного пользователя!":
         # Получаем фильм для рекомендации с учетом жанра и рекомендующего
         name_film = get_film_with_filter(message.chat.id, message.text)
-        # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
         # Записываем сообщение в базу данных
