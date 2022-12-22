@@ -6,9 +6,10 @@ from aiogram import Bot, Dispatcher, executor, types
 from config import API_TOKEN
 from fw.actions_with_message import get_film_with_filter
 from fw.db.tables.table_text_message_from_user import write_message_from_user_in_table_with_type_films, write_message_from_user_in_table, get_messages_from_user, delete_all_messages_from_user, delete_last_messages_from_user
-from fw.db.tables.table_films import get_random_film, add_info_about_film_in_table_films, check_type_films_in_db_films
+from fw.db.tables.table_films import get_random_film, add_info_about_film_in_table_films
 from fw.db.db_base import get_users_who_recommended_with_correct_type_film
 from fw.db.tables.table_users import add_info_about_user_in_table_users
+from fw.actions_with_films import check_type_films_in_db_films
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
