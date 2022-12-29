@@ -15,7 +15,7 @@ def get_everybody_films():
 def add_info_about_film_in_table_films(name_film, type_film, user_id):
     cursor = connection.cursor()
     cursor.execute(
-        f"INSERT INTO public.{name_database}(name, type, user_id_recommended) VALUES ('{name_film.capitalize()}', '{type_film}', '{user_id}');"
+        f"INSERT INTO public.{name_database}(name, type, user_id_recommended) VALUES ('{name_film}', '{type_film}', '{user_id}');"
     )
     connection.commit()
 

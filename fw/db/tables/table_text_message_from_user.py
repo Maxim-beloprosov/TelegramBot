@@ -54,7 +54,11 @@ def get_text_message_with_type_film(user_id):
         f"WHERE user_id = {user_id} and type_films is not null "
         "order by message_id desc;"
     )
-    type_film = cursor.fetchall()[0][0]
+    result = cursor.fetchall()
+    if result == []:
+        type_film = []
+    else:
+        type_film = result[0][0]
     return type_film
 
 # Возвращаем id всех сообщений от пользователя с сортировкой по убыванию
