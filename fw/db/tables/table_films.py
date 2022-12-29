@@ -51,8 +51,9 @@ def get_random_film(user_id):
     return film
 
 # Возвращаем фильм с учетом фильтра
-def get_film_with_filter_from_db(type_film, user_id_recommended=None):
-    count = get_count_string_with_filter(type_film, user_id_recommended)
+def get_film_with_filter_from_db(type_film, user_id_who_write_message, user_id_recommended=None):
+    condition = f"NOT user_id_recommended = {user_id_who_write_message}"
+    count = get_count_string_with_filter(type_film, condition, user_id_recommended)
     cursor = connection.cursor()
     if count > 1:
         random = randint(0, count - 1)
@@ -61,7 +62,7 @@ def get_film_with_filter_from_db(type_film, user_id_recommended=None):
     if user_id_recommended == None:
         cursor.execute(
             f"SELECT name, type, user_id_recommended FROM {name_database} "
-            f"where type Like '%{type_film}%'"
+            f"where type Like '%{type_film}%' and " + condition
         )
     else:
         cursor.execute(
@@ -88,12 +89,12 @@ def get_film_with_filter_from_db(type_film, user_id_recommended=None):
     return film
 
 # Возвращаем количество строк из таблицы films с фильтром жанра и рекомендующего (если он есть)
-def get_count_string_with_filter(type_film, user_id_recommended=None):
+def get_count_string_with_filter(type_film, condition, user_id_recommended=None):
     cursor = connection.cursor()
     if user_id_recommended == None:
         cursor.execute(
             f"SELECT count(*) FROM films "
-            f"where type Like '%{type_film}%'"
+            f"where type Like '%{type_film}%' and " + condition
         )
     else:
         cursor.execute(
