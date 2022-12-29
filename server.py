@@ -23,7 +23,7 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=["start"])
 async def start(message):
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
     # Формируем кнопки для выдачи пользователю
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Очень хочу посмотреть фильм!")
@@ -34,12 +34,12 @@ async def start(message):
     write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
     # Отвечаем пользователю с новыми кнопками
     await message.reply('Привет, ' + message.chat['first_name'] + '! \n'
-                                'Ты уже выбрал, хочешь быть полезен друзьям или они тебе ? =) ', reply_markup=markup)
+                                'Ты уже знаешь, хотел(а) бы ты быть полез(ен/на) друзьям или они тебе? =) ', reply_markup=markup)
 
 @dp.message_handler(commands=["end"])
 async def end(message):
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
     # Получаю время сервера
     time = datetime.datetime.now().strftime("%H")
     # Формирую ответ исходя из времени
@@ -62,7 +62,6 @@ async def end(message):
                         'Жду тебя снова!', reply_markup=markup)
 
 
-
 @dp.message_handler(content_types=["text"])
 async def first_step_want_watch_film(message):
     # Получаем последнее сообщение от пользователя
@@ -75,7 +74,7 @@ async def first_step_want_watch_film(message):
     # Получаем жанры фильмов, которые рекомендовали
     type_films_which_recommended = check_type_films_in_db_films()
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'], message.chat['last_name'])
+    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
 
     # Сценарий 1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя /start
@@ -90,7 +89,7 @@ async def first_step_want_watch_film(message):
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Отвечаем пользователю с новыми кнопками
         await message.reply('Используем рандом? \n'
-                            'Или ты готов ответить на пару/тройку вопросов?', reply_markup=markup)
+                            'Или ты готов(а) ответить на несколько вопросов?', reply_markup=markup)
 
 
     # Сценарий 1.2 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
@@ -118,9 +117,9 @@ async def first_step_want_watch_film(message):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
         # Отвечаем пользователю с возможностью окончания диалога
-        await message.reply('Рандом так рандом, вот тебе название фильма: \n\n'
+        await message.reply('Отличный выбор! Вот тебе название фильма: \n\n'
                             f'<b>{name_film}</b>\n\n'
-                            'И наконец, чтобы закончить этот приятный диалог нажми /end ,пожалуйста! Удачи! =)'
+                            'Чтобы закончить этот приятный диалог нажми /end пожалуйста! Удачи! =)'
                             , reply_markup=markup, parse_mode="html")
 
     # Сценарий 1.1.2 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
@@ -160,7 +159,7 @@ async def first_step_want_watch_film(message):
         write_message_from_user_in_table_with_type_films(message.chat.id, message.message_id, message.text, message.text)
         # Отвечаем пользователю
         await message.reply('С жанром определились. \n'
-                            'Давай теперь определимся, хочешь ли выбрать фильм от какого-то конкретного человек?', reply_markup=markup)
+                            'Давай теперь определимся, хочешь ли ты выбрать рекомендацию фильма от конкретного друга?', reply_markup=markup)
 
     # Сценарий 1.2.1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, было ли предпоследнее сообщение от пользователя "Готов пополнить список фильмов =)" и было ли последнее сообщение от пользователя, с жанром фильма

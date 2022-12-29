@@ -12,16 +12,15 @@ connection = psycopg2.connect(
 def get_users_who_recommended_with_correct_type_film(type):
     cursor = connection.cursor()
     cursor.execute(
-        f"SELECT users.id, users.name, users.surname "
+        f"SELECT users.full_name "
         "FROM users "
-        "INNER JOIN films ON users.id=films.user_id_recommended "
+        "INNER JOIN films ON users.id = films.user_id_recommended "
         f"where type Like '%{type}%';"
     )
     information_about_users = cursor.fetchall()
     list_users = []
     for user in information_about_users:
-        surname_and_name = user[1] + ' ' + user[2]
-        if surname_and_name not in list_users:
-            list_users.append(surname_and_name)
+        if user[0] not in list_users:
+            list_users.append(user[0])
 
     return list_users

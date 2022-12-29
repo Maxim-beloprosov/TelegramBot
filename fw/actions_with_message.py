@@ -3,15 +3,10 @@ from fw.db.tables.table_users import get_id_user
 from fw.db.tables.table_text_message_from_user import get_text_message_with_type_film
 
 # Возвращаем фильм с учетом фильтра
-def get_film_with_filter(user_id_who_write_message, name_and_surname_user=None):
-    if name_and_surname_user != None:
-        # Разбиваем имя и фамилию
-        name_and_surname_user = name_and_surname_user.split(' ')
-        name = name_and_surname_user[0]
-        surname = name_and_surname_user[1]
-
-        # Получаем id пользователя через базу данных users, зная имя и фамилию
-        user_id_recommended = get_id_user(name, surname)
+def get_film_with_filter(user_id_who_write_message, full_name=None):
+    if full_name != None:
+        # Получаем id пользователя через базу данных users, зная полное имя
+        user_id_recommended = get_id_user(full_name)
     else:
         user_id_recommended = None
 

@@ -1,6 +1,5 @@
 from fw.db.db_base import connection
 from random import randint
-from data.group_data import type_films
 
 name_database = 'films'
 
@@ -16,7 +15,7 @@ def get_everybody_films():
 def add_info_about_film_in_table_films(name_film, type_film, user_id):
     cursor = connection.cursor()
     cursor.execute(
-        f"INSERT INTO public.{name_database}(name, type, user_id_recommended) VALUES ('{name_film}', '{type_film}', '{user_id}');"
+        f"INSERT INTO public.{name_database}(name, type, user_id_recommended) VALUES ('{name_film.capitalize()}', '{type_film}', '{user_id}');"
     )
     connection.commit()
 
@@ -82,5 +81,13 @@ def get_type_which_is_recommended():
     cursor = connection.cursor()
     cursor.execute(
         f"SELECT type FROM {name_database} "
+    )
+    return cursor.fetchall()
+
+# Возвращаем информацию о названиях фильма из таблицы films, которые рекомендовали
+def get_name_film_which_is_recommended():
+    cursor = connection.cursor()
+    cursor.execute(
+        f"SELECT name FROM {name_database} "
     )
     return cursor.fetchall()
