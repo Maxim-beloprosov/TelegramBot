@@ -116,7 +116,7 @@ async def first_step_want_watch_film(message):
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя 'Очень хочу посмотреть фильм!'
     elif message.text == 'Готов отдаться богу рандома! НЕ ВАЖНО, КАКОЙ ФИЛЬМ, ВАЖНО, КТО ЕГО ПОСОВЕТОВАЛ...' and text_last_message == 'Очень хочу посмотреть фильм!':
         # Берем рандомный фильм из списка фильмов в базе данных
-        name_film = get_random_film()
+        info_film = get_random_film(message.chat.id)
         # Записываем сообщение от пользователя в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Добавляем кнопку /end
@@ -124,7 +124,8 @@ async def first_step_want_watch_film(message):
         markup.add(types.KeyboardButton("/end"))
         # Отвечаем пользователю с возможностью окончания диалога
         await message.reply('Отличный выбор! Вот тебе название фильма: \n\n'
-                            f'<b>{name_film}</b>\n\n'
+                            f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
+                            f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
                             'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)'
                             , reply_markup=markup, parse_mode="html")
 
@@ -251,45 +252,48 @@ async def first_step_want_watch_film(message):
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя 'Очень хочу посмотреть фильм!'
     elif message.text == "Уверен в каждом из рекомендателей =)" and text_last_message in type_films_which_recommended:
         # Получаем фильм для рекомендации с учетом жанра и реомендующего
-        name_film = get_film_with_filter(message.chat.id)
+        info_film = get_film_with_filter(message.chat.id)
         # Записываем сообщение в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
-                            f'<b>{name_film}</b>\n\n'
-                            'Чтобы закончить этот приятный диалог нажми /end. Приятного просмотра! =)', reply_markup=markup, parse_mode="html"
-                            )
+                            f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
+                            f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
+                            'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)'
+                            , reply_markup=markup, parse_mode="html")
 
     # Сцеарий 1.1.2.1.1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, данное сообщение (пользователь) есть ли в списке рекомендателей и было ли последнее сообщение от пользователя "Хочу рекомендацию от конкретного пользователя!"
     elif message.text != "Подходящего рекомендателя, к сожалению, нет =(" and text_last_message == "Хочу рекомендацию от конкретного друга!":
         # Получаем фильм для рекомендации с учетом жанра и рекомендующего
-        name_film = get_film_with_filter(message.chat.id, message.text)
+        info_film = get_film_with_filter(message.chat.id, message.text)
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
         # Записываем сообщение в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
-                            f'<b>{name_film}</b>\n\n'
-                            'Чтобы закончить этот приятный диалог нажми /end. Приятного просмотра! =)', reply_markup=markup, parse_mode="html"
-                            )
+                      f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
+                      f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
+                      'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)'
+                      , reply_markup=markup, parse_mode="html")
 
     # Сценарий 1.1.2.1.1.1.2 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
     # Проверяем, новое сообщение соответствует ли кнопке в предыдущем шаге и было ли последнее сообщение от пользователя 'Очень хочу посмотреть фильм!'
     elif message.text == "Подходящего рекомендателя, к сожалению, нет =(" and text_last_message == "Хочу рекомендацию от конкретного друга!":
         # Получаем фильм для рекомендации с учетом жанра и реомендующего
-        name_film = get_film_with_filter(message.chat.id)
+        info_film = get_film_with_filter(message.chat.id)
         # Записываем сообщение в базу данныхият
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
-                            f'<b>{name_film}</b>\n\n'
-                            'Чтобы закончить этот приятный диалог нажми /end. Приятного просмотра! =)', reply_markup=markup, parse_mode="html"
-                            )
+                            f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
+                            f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
+                            'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)'
+                            , reply_markup=markup, parse_mode="html")
 
     # Обработчик ошибок, если вдруг пользователь случайно нажал 2 раза на кнопку
     # Проверяем, последнее сообщение такое же как и вновь поступившее

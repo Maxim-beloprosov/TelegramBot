@@ -14,6 +14,6 @@ def get_film_with_filter(user_id_who_write_message, full_name=None):
     type_film = get_text_message_with_type_film(user_id_who_write_message)
 
     # Получаем фильм с учетом фильтра (Жанр и рекомендующий, если он есть)
-    name_film = get_film_with_filter_from_db(type_film, user_id_recommended)
+    info_about_film = get_film_with_filter_from_db(type_film, user_id_recommended)
 
-    return name_film
+    return info_about_film

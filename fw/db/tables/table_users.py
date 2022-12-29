@@ -43,3 +43,12 @@ def get_id_user(full_name):
         f"where full_name = '{full_name}'"
     )
     return cursor.fetchall()[0][0]
+
+def get_full_name_user(user_id):
+    cursor = connection.cursor()
+    cursor.execute(
+        f"SELECT full_name FROM {name_database} "
+        f"where id = '{user_id}'"
+    )
+    result = cursor.fetchall()[0][0]
+    return result

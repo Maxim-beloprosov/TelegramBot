@@ -1,6 +1,8 @@
 from fw.db.db_base import connection
 from random import randint
 
+from fw.db.tables.table_users import get_full_name_user
+
 name_database = 'films'
 
 # Возвращаем всю информацию из таблицы films
@@ -20,22 +22,33 @@ def add_info_about_film_in_table_films(name_film, type_film, user_id):
     connection.commit()
 
 # Возвращаем количество строк из таблицы films
-def get_count_string():
+def get_count_string(condition=''):
     cursor = connection.cursor()
     cursor.execute(
-        f"SELECT count(*) FROM {name_database}"
+        f"SELECT count(*) FROM {name_database} " + condition
     )
     return cursor.fetchall()[0][0]
 
 # Возвращаем рандомный фильм
-def get_random_film():
-    count = get_count_string()
+def get_random_film(user_id):
+    condition = f"where NOT user_id_recommended = {user_id}"
+    count = get_count_string(condition)
     cursor = connection.cursor()
     random = randint(0, count - 1)
     cursor.execute(
-        f"SELECT name FROM {name_database} "
+        f"SELECT name, type, user_id_recommended FROM {name_database} " + condition
     )
-    return cursor.fetchall()[int(random)][0]
+    info_about_film = cursor.fetchall()
+    info_about_film = info_about_film[int(random)]
+
+    user_recommended = get_full_name_user(info_about_film[2])
+
+    film = {
+        'name': info_about_film[0],
+        'type_film': info_about_film[1],
+        'user_recommended': user_recommended
+    }
+    return film
 
 # Возвращаем фильм с учетом фильтра
 def get_film_with_filter_from_db(type_film, user_id_recommended=None):
@@ -47,19 +60,32 @@ def get_film_with_filter_from_db(type_film, user_id_recommended=None):
         random = 0
     if user_id_recommended == None:
         cursor.execute(
-            f"SELECT name FROM {name_database} "
+            f"SELECT name, type, user_id_recommended FROM {name_database} "
             f"where type Like '%{type_film}%'"
         )
     else:
         cursor.execute(
-            f"SELECT name FROM {name_database} "
+            f"SELECT name, type, user_id_recommended FROM {name_database} "
             f"where type Like '%{type_film}%' and user_id_recommended = {user_id_recommended}"
         )
     if count == 1:
-        name_film = cursor.fetchall()[0][0]
+        info_about_film = cursor.fetchall()[0]
+        user_recommended = get_full_name_user(info_about_film[2])
+        film = {
+            'name': info_about_film[0],
+            'type_film': info_about_film[1],
+            'user_recommended': user_recommended
+        }
     else:
-        name_film = cursor.fetchall()[int(random)][0]
-    return name_film
+        info_about_film = cursor.fetchall()
+        info_about_film = info_about_film[int(random)]
+        user_recommended = get_full_name_user(info_about_film[2])
+        film = {
+            'name': info_about_film[0],
+            'type_film': info_about_film[1],
+            'user_recommended': user_recommended
+        }
+    return film
 
 # Возвращаем количество строк из таблицы films с фильтром жанра и рекомендующего (если он есть)
 def get_count_string_with_filter(type_film, user_id_recommended=None):
