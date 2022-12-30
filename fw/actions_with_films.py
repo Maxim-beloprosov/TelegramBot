@@ -11,15 +11,10 @@ def get_type_films_in_db_films():
     list_type_films = []
     # Перебираем все жанры
     for type_film in type_films:
-        # Перебираем все жанры, которые уже рекомендовали
-        for type_film_from_table_films in type_films_which_recommended:
-            # Проверяем, есть ли жанр в списке рекомендованных
-            if type_film in type_film_from_table_films:
-                # Проверяем, нет ли жанра уже в нашем списке, который мы формировали вначале
-                if type_film not in list_type_films:
-                    # Если нет - добавляем его
-                    list_type_films.append(type_film)
-                    break
+        # Проверяем, есть ли жанр в списке рекомендованных
+        if type_film in str(type_films_which_recommended):
+            # Если есть - добавляем его
+            list_type_films.append(type_film)
     return list_type_films
 
 def get_type_films_without_type_which_user_select(user_id):
@@ -29,6 +24,8 @@ def get_type_films_without_type_which_user_select(user_id):
     list_type_films = []
     # Перебираем все жанры
     for type_film in type_films:
+        # Проверяем, соответствует ли жанр, который пользователь выбирал уже ранее с тем, который мы перебираем. Чтобы исключить и не показывать выбранный жанр снова
         if type_films_which_user_select != type_film:
+            # Если не соответствует, добавляем его в список
             list_type_films.append(type_film)
     return list_type_films

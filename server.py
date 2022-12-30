@@ -1,4 +1,3 @@
-import logging
 import datetime
 
 from data.group_data import type_films
@@ -11,8 +10,6 @@ from fw.db.db_base import get_users_who_recommended_with_correct_type_film
 from fw.db.tables.table_users import add_info_about_user_in_table_users
 from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
 bot = Bot(token=API_TOKEN)
