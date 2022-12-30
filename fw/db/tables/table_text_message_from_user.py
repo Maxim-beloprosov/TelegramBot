@@ -55,8 +55,11 @@ def get_text_message_with_type_film(user_id):
         "order by message_id desc;"
     )
     result = cursor.fetchall()
+    # Проверяем, пришел ли ответ пустой
+    # Если ответ пустой, объявляем жанр фильма [] (пустым)
     if result == []:
         type_film = []
+    # Если ответ не пустой, берем значение первого элемента
     else:
         type_film = result[0][0]
     return type_film
@@ -72,6 +75,7 @@ def get_id_messages_from_user(user_id):
 
 # Удаляем последнее сообщение от пользователя
 def delete_last_messages_from_user(user_id):
+    # Возвращаем все сообщения от пользователя с сортировкой по убыванию и берем id последнего сообщения
     id_message = get_id_messages_from_user(user_id)[0][0]
     cursor = connection.cursor()
     cursor.execute(

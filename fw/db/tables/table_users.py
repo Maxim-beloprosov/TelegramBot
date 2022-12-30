@@ -18,6 +18,7 @@ def check_is_there_id_user_in_table_users(id):
         f"SELECT id FROM {name_database} "
         f"where id = {id}"
     )
+    # Проверяем, пришел ли ответ пустой или нет
     if cursor.fetchall() == []:
         # Если список приходит пустым, отправляем False
         return False

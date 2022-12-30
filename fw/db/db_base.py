@@ -18,8 +18,11 @@ def get_users_who_recommended_with_correct_type_film(type):
         f"where type Like '%{type}%';"
     )
     information_about_users = cursor.fetchall()
+    # Формируем список на будущее
     list_users = []
+    # Перебираем пользователей из рекомендателей
     for user in information_about_users:
+        # Если пользователя нет в списке для выдачи, то добавляем его туда
         if user[0] not in list_users:
             list_users.append(user[0])
 

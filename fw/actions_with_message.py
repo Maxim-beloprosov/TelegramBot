@@ -4,6 +4,7 @@ from fw.db.tables.table_text_message_from_user import get_text_message_with_type
 
 # Возвращаем фильм с учетом фильтра
 def get_film_with_filter(user_id_who_write_message, full_name=None):
+    # Проверяем, пришла ли информация о полном имени пользователя
     if full_name != None:
         # Получаем id пользователя через базу данных users, зная полное имя
         user_id_recommended = get_id_user(full_name)

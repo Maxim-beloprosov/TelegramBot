@@ -135,6 +135,7 @@ async def first_step_want_watch_film(message):
             markup.add(types.KeyboardButton(type_films_which_recommended[i]))
         # Записываем сообщение от пользователя в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
+        # Отвечаем пользователю
         await message.reply('Фильм какого жанра ты хочешь посмотреть сегодня?', reply_markup=markup)
 
     # Сценарий 1.2.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
@@ -148,6 +149,7 @@ async def first_step_want_watch_film(message):
         item2 = types.KeyboardButton("Недостаточно, нужно добавить еще 1 жанр.")
         markup.add(item1)
         markup.add(item2)
+        # Отвечаем пользователю
         await message.reply('Достаточно ли указать один жанр у данного фильма?', reply_markup=markup)
 
 
@@ -158,6 +160,7 @@ async def first_step_want_watch_film(message):
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
         # Удаляем все предыдущие кнопки
         a = types.ReplyKeyboardRemove()
+        # Отвечаем пользователю
         await message.reply('С жанром определились. \n'
                             'Теперь укажи название фильма...', reply_markup=a)
 
@@ -211,6 +214,7 @@ async def first_step_want_watch_film(message):
         write_message_from_user_in_table_with_type_films(message.chat.id, message.message_id, message.text, message.text)
         # Удаляем все предыдущие кнопки
         a = types.ReplyKeyboardRemove()
+        # Отвечаем пользователю
         await message.reply('С жанром определились. \n'
                             'Теперь укажи название фильма...', reply_markup=a)
 
@@ -255,6 +259,7 @@ async def first_step_want_watch_film(message):
         # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
+        # Отвечаем пользователю
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
                             f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
                             f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
@@ -270,6 +275,7 @@ async def first_step_want_watch_film(message):
         markup.add(types.KeyboardButton("/end"))
         # Записываем сообщение в базу данных
         write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
+        # Отвечаем пользователю
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
                       f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
                       f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
@@ -286,6 +292,7 @@ async def first_step_want_watch_film(message):
         # Формируем кнопки для выдачи пользователю
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         markup.add(types.KeyboardButton("/end"))
+        # Отвечаем пользователю
         await message.reply('Спасибо за долгий путь со мной, вот тебе название фильма: \n\n'
                             f'<b>{info_film["name"]}</b> ({info_film["type_film"]}) \n'
                             f'Рекомендовал(а): {info_film["user_recommended"]} \n\n'
@@ -297,11 +304,13 @@ async def first_step_want_watch_film(message):
     elif message.text == text_last_message:
         # Удаляем последнее сообщение из базы
         delete_last_messages_from_user(message.chat.id)
+        # Отвечаем пользователю
         await message.reply('Кажется, кнопка нажалась 2 раза =( \n'
                             'Попробуй снова...')
 
 
     else:
+        # Отвечаем пользователю
         await message.reply('Упс, такой вариант я не предусмотрел. \n'
                             'Попробуй заново, нажми /start')
 
