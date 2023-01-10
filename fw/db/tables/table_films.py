@@ -132,9 +132,9 @@ def get_type_which_is_recommended():
     return cursor.fetchall()
 
 # Возвращаем информацию о названиях фильма из таблицы films, которые рекомендовали
-def get_name_film_which_is_recommended():
+def get_info_about_film_which_is_recommended():
     cursor = connection.cursor()
     cursor.execute(
-        f"SELECT name FROM {name_database} "
+        f"SELECT name, type, user_id_recommended, id FROM {name_database} "
     )
     return cursor.fetchall()
