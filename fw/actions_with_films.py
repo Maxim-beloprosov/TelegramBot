@@ -3,6 +3,7 @@ from data.group_data import type_films
 from fw.db.tables.table_films import get_type_which_is_recommended, add_info_about_film_in_table_films, get_info_about_film_which_is_recommended
 from fw.db.tables.table_text_message_from_user import get_text_message_with_type_film
 from fw.db.tables.table_users import get_full_name_user
+from fw.db.db_base import connection
 
 
 # Получаем жанры, которые уже рекомендавали ранее
@@ -36,6 +37,8 @@ def get_type_films_without_type_which_user_select(user_id):
 
 # Записываем рекомендованный фильм в бд, если там его еще нет
 def add_film_in_db(name_film, type_film, user_id):
+    cursor = connection.cursor()
+    list_users = []
     flag = True
     # Получаем информацию о фильмов
     name_films_which_recommended = get_info_about_film_which_is_recommended()
@@ -49,10 +52,33 @@ def add_film_in_db(name_film, type_film, user_id):
         return True
     else:
         user_recommended = get_full_name_user(name_films_which_recommended[count][2])
+        cursor.execute(
+            f"SELECT users_recommended_films.user_id FROM users_recommended_films "
+            f"INNER JOIN films ON users_recommended_films.film_id = films.id "
+            f"where name = '{name_films_which_recommended[count][0]}'"
+        )
+        # Получаем информацию о пользователях, которые рекомендовали фильм, но не первые
+        information_about_users_id = cursor.fetchall()
+
+        if information_about_users_id != []:
+            # Формируем тело для получения имен пользователей, которые рекомендовали фильм, но сделали это не первыми
+            request = "SELECT full_name FROM users "
+            for i in range(len(information_about_users_id[0])):
+                request = request + f"where id = {information_about_users_id[0][i]} "
+
+            cursor.execute(request)
+            new_list_user = cursor.fetchall()
+            # Перебираем пользователей из рекомендателей
+            for user in new_list_user[0]:
+                # Если пользователя нет в списке для выдачи, то добавляем его туда
+                if user not in list_users:
+                    list_users.append(' ' + user)
+
         result = {
             'name': name_films_which_recommended[count][0],
             'type_film': name_films_which_recommended[count][1],
             'user_recommended': user_recommended,
-            'film_id': name_films_which_recommended[count][3]
+            'film_id': name_films_which_recommended[count][3],
+            'users_id_recommended': list_users
         }
         return result

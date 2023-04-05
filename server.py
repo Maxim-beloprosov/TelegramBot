@@ -250,10 +250,17 @@ async def first_step_want_watch_film(message):
             markup.add(types.KeyboardButton("/end"))
             add_info_about_user_in_table_user_recommended(message.chat.id, result['film_id'])
             # Отвечаем пользователю
-            await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
-                            f'<b>{result["name"]}</b> ({result["type_film"]}) \n'
-                            f'Рекомендовал(а): {result["user_recommended"]} \n\n'
-                            'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)', reply_markup=markup, parse_mode="html")
+            # Проверяем, есть ли те, кто рекомендовали этот фильм, но не первыми
+            if result['users_id_recommended'] == []:
+                await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
+                                    f'<b>{result["name"]}</b> ({result["type_film"]}) \n'
+                                    f'Рекомендовал(а): {result["user_recommended"]} \n\n'
+                                    'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)', reply_markup=markup, parse_mode="html")
+            else:
+                await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
+                                    f'<b>{result["name"]}</b> ({result["type_film"]}) \n'
+                                    f'Рекомендовали: {result["user_recommended"] + result["users_id_recommended"]} \n\n'
+                                    'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)', reply_markup=markup, parse_mode="html")
 
     # 5 шаг
     # Сценарий 1.2.1.2.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
@@ -320,10 +327,17 @@ async def first_step_want_watch_film(message):
             markup.add(types.KeyboardButton("/end"))
             add_info_about_user_in_table_user_recommended(message.chat.id, result['film_id'])
             # Отвечаем пользователю
-            await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
+            # Проверяем, есть ли те, кто рекомендовали этот фильм, но не первыми
+            if result['users_id_recommended'] == []:
+                await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
                                 f'<b>{result["name"]}</b> ({result["type_film"]}) \n'
                                 f'Рекомендовал(а): {result["user_recommended"]} \n\n'
                                 'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)', reply_markup=markup, parse_mode="html")
+            else:
+                await message.reply('Спасибо, но кажется этот фильм уже порекомендовали! \n\n'
+                                    f'<b>{result["name"]}</b> ({result["type_film"]}) \n'
+                                    f'Рекомендовали: {result["user_recommended"] + result["users_id_recommended"]} \n\n'
+                                    'Чтобы закончить этот приятный диалог нажми /end.  Приятного просмотра! =)', reply_markup=markup, parse_mode="html")
 
     # Обработчик ошибок, если вдруг пользователь случайно нажал 2 раза на кнопку
     # Проверяем, последнее сообщение такое же как и вновь поступившее
