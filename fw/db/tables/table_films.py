@@ -31,7 +31,7 @@ def get_count_string(condition=''):
 
 # Возвращаем рандомный фильм
 def get_random_film(user_id):
-    # Задаем условие
+    # Задаем условие, чтобы не рекомендовались фильмы от того пользователя, который запрашивает
     condition = f" where NOT user_id_recommended = {user_id}"
     # Получаем количество строк в таблице films с условием
     count = get_count_string(condition)
