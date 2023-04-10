@@ -6,7 +6,7 @@ from fw.db.tables.table_users import get_full_name_user
 name_database = 'films'
 
 # Возвращаем всю информацию из таблицы films
-def get_everybody_films():
+def get_all_information_from_table_films():
     cursor = connection.cursor()
     cursor.execute(
         f"SELECT * FROM {name_database}"

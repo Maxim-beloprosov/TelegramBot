@@ -4,12 +4,13 @@ from data.group_data import type_films
 from aiogram import Bot, Dispatcher, executor, types
 from config import API_TOKEN
 from fw.actions_with_message import get_film_with_filter
+from fw.actions_with_users import get_users_who_recommended_films
 from fw.db.tables.table_text_message_from_user import write_message_from_user_in_table_with_type_films, write_message_from_user_in_table, get_messages_from_user, delete_all_messages_from_user, get_text_message_with_type_film
 from fw.db.tables.table_films import get_random_film
 from fw.db.db_base import get_users_who_recommended_with_correct_type_film
 from fw.db.tables.table_user_recommended import add_info_about_user_in_table_user_recommended
 from fw.db.tables.table_users import add_info_about_user_in_table_users
-from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select, add_film_in_db
+from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select, add_film_in_db, get_films_which_recommended
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,6 +18,18 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+
+
+# Функция, обрабатывающая команду /users
+@dp.message_handler(commands=["users"])
+async def users(message):
+    users = get_users_who_recommended_films()
+    await message.reply(users)
+
+@dp.message_handler(commands=["films"])
+async def films(message):
+    films = get_films_which_recommended()
+    await message.reply(films)
 
 # Функция, обрабатывающая команду /start
 @dp.message_handler(commands=["start"])

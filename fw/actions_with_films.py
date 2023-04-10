@@ -1,6 +1,5 @@
-# Проверяем, есть ли жанр в рекомендованных фильмах
 from data.group_data import type_films
-from fw.db.tables.table_films import get_type_which_is_recommended, add_info_about_film_in_table_films, get_info_about_film_which_is_recommended
+from fw.db.tables.table_films import get_type_which_is_recommended, add_info_about_film_in_table_films, get_info_about_film_which_is_recommended, get_all_information_from_table_films
 from fw.db.tables.table_text_message_from_user import get_text_message_with_type_film
 from fw.db.tables.table_users import get_full_name_user
 from fw.db.db_base import connection
@@ -82,3 +81,11 @@ def add_film_in_db(name_film, type_film, user_id):
             'users_id_recommended': list_users
         }
         return result
+
+# Получаем названия фильтом, которые рекомендовали фильмы
+def get_films_which_recommended():
+    films = ''
+    list_films = get_all_information_from_table_films()
+    for film in list_films:
+        films = films + film[0] + '\n'
+    return films
