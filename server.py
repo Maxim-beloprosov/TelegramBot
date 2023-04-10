@@ -68,8 +68,8 @@ async def start(message):
     markup.add(item2)
     # Записываем сообщение от пользователя в базу данных
     write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
-    # Проверка на ID Максима Белопросова
-    if message.chat.id == 120642569:
+    # Проверка на ID Максима и Любаву Белопросовых
+    if message.chat.id == 120642569 or message.chat.id == 182953665:
         item3 = types.KeyboardButton("/users")
         item4 = types.KeyboardButton("/films")
         markup.add(item3)
