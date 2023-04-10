@@ -88,4 +88,5 @@ def get_films_which_recommended():
     list_films = get_all_information_from_table_films()
     for film in list_films:
         films = films + film[0] + '\n'
+    films = films + '\n' + 'Всего: ' + str(len(list_films))
     return films

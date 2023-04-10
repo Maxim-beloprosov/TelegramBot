@@ -53,3 +53,13 @@ def get_full_name_user(user_id):
     )
     result = cursor.fetchall()[0][0]
     return result
+
+# Переименовать пользователя
+def rename_user(actual_name, correct_name):
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE users "
+        f"SET full_name = '{correct_name}' "
+        f"where full_name_in_telegram = '{actual_name}'"
+    )
+    connection.commit()

@@ -9,7 +9,7 @@ from fw.db.tables.table_text_message_from_user import write_message_from_user_in
 from fw.db.tables.table_films import get_random_film
 from fw.db.db_base import get_users_who_recommended_with_correct_type_film
 from fw.db.tables.table_user_recommended import add_info_about_user_in_table_user_recommended
-from fw.db.tables.table_users import add_info_about_user_in_table_users
+from fw.db.tables.table_users import add_info_about_user_in_table_users, rename_user
 from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select, add_film_in_db, get_films_which_recommended
 
 logging.basicConfig(level=logging.INFO)
@@ -24,12 +24,35 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=["users"])
 async def users(message):
     users = get_users_who_recommended_films()
-    await message.reply(users)
+    # Формируем кнопки для выдачи пользователю
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("/rename")
+    item2 = types.KeyboardButton("/films")
+    item3 = types.KeyboardButton("/end")
+    markup.add(item1)
+    markup.add(item2)
+    markup.add(item3)
+    await message.reply(users, reply_markup=markup)
 
 @dp.message_handler(commands=["films"])
 async def films(message):
+    # Формируем кнопки для выдачи пользователю
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("/users")
+    item2 = types.KeyboardButton("/end")
+    markup.add(item1)
+    markup.add(item2)
     films = get_films_which_recommended()
-    await message.reply(films)
+    await message.reply(films, reply_markup=markup)
+
+@dp.message_handler(commands=["rename"])
+async def rename(message):
+    # Записываем сообщение от пользователя в базу данных
+    write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
+    # Удаляем все предыдущие кнопки
+    a = types.ReplyKeyboardRemove()
+    await message.reply('Давай переименуем пользователя. \n'
+                        'Сначала укажи его имя и фамилию в телеграме, а через запятую укажи полное имя на русском языкe', reply_markup=a)
 
 # Функция, обрабатывающая команду /start
 @dp.message_handler(commands=["start"])
@@ -45,6 +68,12 @@ async def start(message):
     markup.add(item2)
     # Записываем сообщение от пользователя в базу данных
     write_message_from_user_in_table(message.chat.id, message.message_id, message.text)
+    # Проверка на ID Максима Белопросова
+    if message.chat.id == 120642569:
+        item3 = types.KeyboardButton("/users")
+        item4 = types.KeyboardButton("/films")
+        markup.add(item3)
+        markup.add(item4)
     # Отвечаем пользователю с новыми кнопками
     await message.reply('Привет, ' + message.chat['first_name'] + '! \n'
                                 'Ты уже знаешь, хотел(а) бы ты быть полезен(на) друзьям или они тебе? =) ', reply_markup=markup)
@@ -358,6 +387,16 @@ async def first_step_want_watch_film(message):
         # Отвечаем пользователю
         await message.reply('Кажется, кнопка нажалась 2 раза =( \n'
                             'Попробуй снова...')
+
+    elif text_last_message == '/rename':
+        info_name_user = message.text.split(',')
+        actual_name = info_name_user[0]
+        correct_name = info_name_user[1][1:]
+        rename_user(actual_name, correct_name)
+        # Отвечаем пользователю
+        await message.reply('Все удалось, Ура! \n'
+                            'Можешь проверить командой /users.')
+
 
 
     else:
