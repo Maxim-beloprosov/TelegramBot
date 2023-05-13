@@ -35,7 +35,7 @@ async def users(message):
     await message.reply(users, reply_markup=markup)
 
 @dp.message_handler(commands=["Команда_1"])
-async def quiz(message):
+async def quiz_1(message):
     img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 1.jpg', 'rb')
     message.reply('Привет! Минутка рекламы, куда без нее в наше время.\n'
                   'Вы знаете для чего данный бот?\n'
@@ -47,7 +47,7 @@ async def quiz(message):
 
 
 @dp.message_handler(commands=["Команда_2"])
-async def quiz(message):
+async def quiz_2(message):
     img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 2.jpg', 'rb')
     message.reply('Привет! Минутка рекламы, куда без нее в наше время.\n'
                   'Вы знаете для чего данный бот?\n'
