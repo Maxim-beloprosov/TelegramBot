@@ -34,7 +34,7 @@ async def users(message):
     markup.add(item3)
     await message.reply(users, reply_markup=markup)
 
-@dp.message_handler(commands=["/обещаем_порекомендовать_фильмы"])
+@dp.message_handler(commands=["обещаем_порекомендовать_фильмы"])
 async def quiz_1(message):
     img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 2.jpg', 'rb')
     # Удаляем все предыдущие кнопки
@@ -54,7 +54,7 @@ async def quiz_1(message):
     await bot.send_photo(message.chat.id, img)
 
 
-@dp.message_handler(commands=["/будем_рекомендовать_фильмы"])
+@dp.message_handler(commands=["будем_рекомендовать_фильмы"])
 async def quiz_2(message):
     img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 1.jpg', 'rb')
     # Удаляем все предыдущие кнопки
