@@ -34,6 +34,30 @@ async def users(message):
     markup.add(item3)
     await message.reply(users, reply_markup=markup)
 
+@dp.message_handler(commands=["Команда_1"])
+async def quiz(message):
+    img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 1.jpg', 'rb')
+    message.reply('Привет! Минутка рекламы, куда без нее в наше время.\n'
+                  'Вы знаете для чего данный бот?\n'
+                  'Поднимите руку те, кто уже рекомендовал фильмы... Молодцы! А теперь постыдите тех людей, кто не рекомендовал =)\n'
+                  'Я знаю, чем вы будете заниматься сегодня вечером или даже уже ночью, удачи! =)'
+                  'РЕКЛАМА ЗАКОНЧИЛАСЬ d[-_-]b\n'
+                  'Вот вам подсказка на следующий этап. Бегиииите ГЛУПЦЫ...')
+    await bot.send_photo(message.chat.id, img)
+
+
+@dp.message_handler(commands=["Команда_2"])
+async def quiz(message):
+    img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 2.jpg', 'rb')
+    message.reply('Привет! Минутка рекламы, куда без нее в наше время.\n'
+                  'Вы знаете для чего данный бот?\n'
+                  'Поднимите руку те, кто уже рекомендовал фильмы... Молодцы! А теперь постыдите тех людей, кто не рекомендовал =)\n'
+                  'Я знаю, чем вы будете заниматься сегодня вечером или даже уже ночью, удачи! =)'
+                  'РЕКЛАМА ЗАКОНЧИЛАСЬ d[-_-]b\n'
+                  'Вот вам подсказка на следующий этап. Бегиииите ГЛУПЦЫ...')
+    await bot.send_photo(message.chat.id, img)
+
+
 @dp.message_handler(commands=["films"])
 async def films(message):
     # Формируем кнопки для выдачи пользователю
