@@ -26,15 +26,15 @@ def all_info_from_table_text_messages_from_user():
     all_info = get_all_information_from_table()
     # Создаем пустой словарь
     messages = {}
-    messages['items'] = {}
+    messages['text_messages_from_user'] = {}
     # Задаем число для списка
     count = 1
     # Перебираем все строки из таблицы
     for message in all_info:
-        messages['items'][count] = {}
+        messages['text_messages_from_user'][count] = {}
         # Перебираем все столбцы из таблицы
         for i in range(0, len(database['text_messages_from_user'])):
-            messages['items'][count][database['text_messages_from_user'][i]] = message[i]
+            messages['text_messages_from_user'][count][database['text_messages_from_user'][i]] = message[i]
         count = count + 1
     return messages
 
@@ -42,14 +42,14 @@ def all_info_from_table_users_recommended_films():
     all_info = get_all_info_from_table_users_recommended_films()
     # Создаем пустой словарь
     recommendations = {}
-    recommendations['items'] = {}
+    recommendations['users_recommended_films'] = {}
     # Задаем число для списка
     count = 1
     # Перебираем все строки из таблицы
     for recommendation in all_info:
-        recommendations['items'][count] = {}
+        recommendations['users_recommended_films'][count] = {}
         # Перебираем все столбцы из таблицы
         for i in range(0, len(database['users_recommended_films'])):
-            recommendations['items'][count][database['users_recommended_films'][i]] = recommendation[i]
+            recommendations['users_recommended_films'][count][database['users_recommended_films'][i]] = recommendation[i]
         count = count + 1
     return recommendations

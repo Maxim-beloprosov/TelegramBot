@@ -47,16 +47,6 @@ async def films(message):
 
 @dp.message_handler(commands=["get_all_info"])
 async def get_all_info(message):
-    # Формируем словарь для данных
-    get_all_info = {
-        'films': {},
-
-        'users': {},
-
-        'text_messages_from_user': {},
-
-        'users_recommended_films': {}
-    }
     # Формируем кнопки для выдачи пользователю
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("/end")
@@ -69,10 +59,14 @@ async def get_all_info(message):
     text_messages_from_user = all_info_from_table_text_messages_from_user()
     # Получаем всю информацию из таблицы users_recommended_films
     users_recommended_films = all_info_from_table_users_recommended_films()
-    await message.reply(films)
-    await message.reply(users)
-    await message.reply(text_messages_from_user)
-    await message.reply(users_recommended_films)
+    await message.reply('База данных films:\n'
+                        + films)
+    await message.reply('База данных users:\n'
+                        + users)
+    await message.reply('База данных text_messages_from_user:\n'
+                        + text_messages_from_user)
+    await message.reply('База данных users_recommended_films:\n'
+                        + users_recommended_films)
 
 @dp.message_handler(commands=["rename"])
 async def rename(message):

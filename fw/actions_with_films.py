@@ -96,15 +96,15 @@ def all_info_from_table_films():
     all_info = get_all_information_from_table_films()
     # Создаем пустой словарь
     films = {}
-    films['items'] = {}
+    films['films'] = {}
     # Задаем число для списка
     count = 1
     # Перебираем все строки из таблицы
     for film in all_info:
-        films['items'][count] = {}
+        films['films'][count] = {}
         # Перебираем все столбцы из таблицы
         for i in range(0, len(database['films'])):
-            films['items'][count][database['films'][i]] = film[i]
+            films['films'][count][database['films'][i]] = film[i]
         count = count + 1
     return films
 
