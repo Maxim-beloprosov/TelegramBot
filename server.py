@@ -59,14 +59,10 @@ async def get_all_info(message):
     text_messages_from_user = all_info_from_table_text_messages_from_user()
     # Получаем всю информацию из таблицы users_recommended_films
     users_recommended_films = all_info_from_table_users_recommended_films()
-    await message.reply('База данных films:\n'
-                        + films)
-    await message.reply('База данных users:\n'
-                        + users)
-    await message.reply('База данных text_messages_from_user:\n'
-                        + text_messages_from_user)
-    await message.reply('База данных users_recommended_films:\n'
-                        + users_recommended_films)
+    await message.reply('База данных films:\n', films)
+    await message.reply('База данных users:\n', users)
+    await message.reply('База данных text_messages_from_user:\n', text_messages_from_user)
+    await message.reply('База данных users_recommended_films:\n', users_recommended_films)
 
 @dp.message_handler(commands=["rename"])
 async def rename(message):
