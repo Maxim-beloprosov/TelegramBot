@@ -3,6 +3,7 @@ from fw.db.tables.table_films import get_type_which_is_recommended, add_info_abo
 from fw.db.tables.table_text_message_from_user import get_text_message_with_type_film
 from fw.db.tables.table_users import get_full_name_user
 from fw.db.db_base import connection
+from data.group_data import database
 
 
 # Получаем жанры, которые уже рекомендавали ранее
@@ -82,7 +83,7 @@ def add_film_in_db(name_film, type_film, user_id):
         }
         return result
 
-# Получаем названия фильтом, которые рекомендовали фильмы
+# Получаем названия фильмом, которые рекомендовали фильмы
 def get_films_which_recommended():
     films = ''
     list_films = get_all_information_from_table_films()
@@ -90,3 +91,20 @@ def get_films_which_recommended():
         films = films + film[0] + '\n'
     films = films + '\n' + 'Всего: ' + str(len(list_films))
     return films
+
+def all_info_from_table_films():
+    all_info = get_all_information_from_table_films()
+    # Создаем пустой словарь
+    films = {}
+    films['items'] = {}
+    # Задаем число для списка
+    count = 1
+    # Перебираем все строки из таблицы
+    for film in all_info:
+        films['items'][count] = {}
+        # Перебираем все столбцы из таблицы
+        for i in range(0, len(database['films'])):
+            films['items'][count][database['films'][i]] = film[i]
+        count = count + 1
+    return films
+

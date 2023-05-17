@@ -3,14 +3,14 @@ import logging
 from data.group_data import type_films
 from aiogram import Bot, Dispatcher, executor, types
 from config import API_TOKEN
-from fw.actions_with_message import get_film_with_filter
-from fw.actions_with_users import get_users_who_recommended_films
+from fw.actions_with_message import get_film_with_filter, all_info_from_table_text_messages_from_user, all_info_from_table_users_recommended_films
+from fw.actions_with_users import get_users_who_recommended_films, all_info_from_table_users
 from fw.db.tables.table_text_message_from_user import write_message_from_user_in_table_with_type_films, write_message_from_user_in_table, get_messages_from_user, delete_all_messages_from_user, get_text_message_with_type_film
 from fw.db.tables.table_films import get_random_film
 from fw.db.db_base import get_users_who_recommended_with_correct_type_film
 from fw.db.tables.table_user_recommended import add_info_about_user_in_table_user_recommended
 from fw.db.tables.table_users import add_info_about_user_in_table_users, rename_user
-from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select, add_film_in_db, get_films_which_recommended
+from fw.actions_with_films import get_type_films_in_db_films, get_type_films_without_type_which_user_select, add_film_in_db, get_films_which_recommended, all_info_from_table_films
 
 logging.basicConfig(level=logging.INFO)
 
@@ -34,50 +34,6 @@ async def users(message):
     markup.add(item3)
     await message.reply(users, reply_markup=markup)
 
-@dp.message_handler(commands=["обещаем_порекомендовать_фильмы"])
-async def quiz_1(message):
-    img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 2.jpg', 'rb')
-    # Формируем кнопки для выдачи пользователю
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("/start")
-    markup.add(item1)
-    await message.reply('Привет!\n\n'
-                        'Минутка рекламы, куда без нее в наше время.\n'
-                        '"ООО Белопросовы"\n'
-                        'Заветы Мичурина 3В\n'
-                        'С любовью и уважением!\n\n'
-                        'Вы знаете для чего данный бот?\n'
-                        'Он решает великую проблему человечества, которая подразумевает под собой рекомендацию хороших (а может и лучших) фильмов от друзей для просмотра. ВОТ ТАК\n'
-
-                        'Поднимите руку те, кто уже рекомендовал фильмы... Молодцы! А теперь постыдите тех, кто не рекомендовал =)\n'
-                        'Я знаю, чем вы будете заниматься сегодня вечером или даже уже ночью, удачи! =)\n'
-                        'РЕКЛАМА ЗАКОНЧИЛАСЬ d[-_-]b\n\n'
-                        'Вот вам подсказка на следующий этап. И помните, главное не куда, а главное - сколько фильмов ты порекомедовал друзьям! =*', reply_markup=markup)
-    await bot.send_photo(message.chat.id, img)
-
-
-@dp.message_handler(commands=["будем_рекомендовать_фильмы"])
-async def quiz_2(message):
-    img = open('C:\\Users\\Administrator\\ChatBot\\data\\Картинка 1.jpg', 'rb')
-    # Формируем кнопки для выдачи пользователю
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("/start")
-    markup.add(item1)
-    await message.reply('Привет!\n\n'
-                        'Минутка рекламы, куда без нее в наше время.\n'
-                        '"ООО Белопросовы"\n'
-                        'Заветы Мичурина 3В\n'
-                        'С любовью и уважением!\n\n'
-                        'Вы знаете для чего данный бот?\n'
-                        'Он решает великую проблему человечества, которая подразумевает под собой рекомендацию хороших (а может и лучших) фильмов от друзей для просмотра. ВОТ ТАК\n'
-
-                        'Поднимите руку те, кто уже рекомендовал фильмы... Молодцы! А теперь постыдите тех, кто не рекомендовал =)\n'
-                        'Я знаю, чем вы будете заниматься сегодня вечером или даже уже ночью, удачи! =)\n'
-                        'РЕКЛАМА ЗАКОНЧИЛАСЬ d[-_-]b\n\n'
-                        'Вот вам подсказка на следующий этап. И помните, главное не куда, а главное - сколько фильмов ты порекомедовал друзьям! =*', reply_markup=markup)
-    await bot.send_photo(message.chat.id, img)
-
-
 @dp.message_handler(commands=["films"])
 async def films(message):
     # Формируем кнопки для выдачи пользователю
@@ -88,6 +44,32 @@ async def films(message):
     markup.add(item2)
     films = get_films_which_recommended()
     await message.reply(films, reply_markup=markup)
+
+@dp.message_handler(commands=["get_all_info"])
+async def get_all_info(message):
+    # Формируем словарь для данных
+    get_all_info = {
+        'films': {},
+
+        'users': {},
+
+        'text_messages_from_user': {},
+
+        'users_recommended_films': {}
+    }
+    # Формируем кнопки для выдачи пользователю
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("/end")
+    markup.add(item1)
+    # Получаем всю информацию из таблицы films
+    get_all_info['films'] = all_info_from_table_films()
+    # Получаем всю информацию из таблицы users
+    get_all_info['users'] = all_info_from_table_users()
+    # Получаем всю информацию из таблицы text_messages_from_user
+    get_all_info['text_messages_from_user'] = all_info_from_table_text_messages_from_user()
+    # Получаем всю информацию из таблицы users_recommended_films
+    get_all_info['users_recommended_films'] = all_info_from_table_users_recommended_films()
+    await message.reply(get_all_info, reply_markup=markup)
 
 @dp.message_handler(commands=["rename"])
 async def rename(message):
@@ -116,8 +98,10 @@ async def start(message):
     if message.chat.id == 120642569 or message.chat.id == 182953665:
         item3 = types.KeyboardButton("/users")
         item4 = types.KeyboardButton("/films")
+        item5 = types.KeyboardButton("/get_all_info")
         markup.add(item3)
         markup.add(item4)
+        markup.add(item5)
     # Отвечаем пользователю с новыми кнопками
     await message.reply('Привет, ' + message.chat['first_name'] + '! \n'
                                 'Ты уже знаешь, хотел(а) бы ты быть полезен(на) друзьям или они тебе? =) ', reply_markup=markup)

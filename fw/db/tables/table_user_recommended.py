@@ -26,3 +26,11 @@ def check_is_there_recommendation_in_table_users_recommended_films(user_id, film
     else:
         # Если список не пустой, значит нужный id мы нашли и отправляем True
         return True
+
+# Возвращаем всю информацию из таблицы users_recommended_films
+def get_all_info_from_table_users_recommended_films():
+    cursor = connection.cursor()
+    cursor.execute(
+        f"SELECT * FROM {name_database}"
+    )
+    return cursor.fetchall()
