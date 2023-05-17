@@ -62,14 +62,17 @@ async def get_all_info(message):
     item1 = types.KeyboardButton("/end")
     markup.add(item1)
     # Получаем всю информацию из таблицы films
-    get_all_info['films'] = all_info_from_table_films()
+    films = all_info_from_table_films()
     # Получаем всю информацию из таблицы users
-    get_all_info['users'] = all_info_from_table_users()
+    users = all_info_from_table_users()
     # Получаем всю информацию из таблицы text_messages_from_user
-    get_all_info['text_messages_from_user'] = all_info_from_table_text_messages_from_user()
+    text_messages_from_user = all_info_from_table_text_messages_from_user()
     # Получаем всю информацию из таблицы users_recommended_films
-    get_all_info['users_recommended_films'] = all_info_from_table_users_recommended_films()
-    await message.reply(get_all_info, reply_markup=markup)
+    users_recommended_films = all_info_from_table_users_recommended_films()
+    await message.reply(films)
+    await message.reply(users)
+    await message.reply(text_messages_from_user)
+    await message.reply(users_recommended_films)
 
 @dp.message_handler(commands=["rename"])
 async def rename(message):
