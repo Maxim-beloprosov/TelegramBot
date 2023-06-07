@@ -32,7 +32,7 @@ def add_info_about_user_in_table_users(user_id, full_name):
     # Проверяем, нет ли такого пользователя уже в таблице users
     if check_is_there_id_user_in_table_users(user_id) == False:
         cursor.execute(
-            f"INSERT INTO public.{name_database}(id, full_name, full_name_in_telegram) VALUES ('{user_id}', '{full_name}', '{full_name}');"
+            f"INSERT INTO public.{name_database}(id, full_name, full_name_in_telegram) VALUES ({user_id}, '{full_name}', '{full_name}');"
         )
         connection.commit()
 
