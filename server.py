@@ -78,7 +78,10 @@ async def rename(message):
 async def start(message):
     # 1 шаг
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    if 'last_name' in message.chat:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    else:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'])
     # Формируем кнопки для выдачи пользователю
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Очень хочу посмотреть фильм!")
@@ -103,7 +106,10 @@ async def start(message):
 async def end(message):
     # Последний шаг
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    if 'last_name' in message.chat:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    else:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'])
     # Получаю время сервера
     time = datetime.datetime.now().strftime("%H")
     # Формирую ответ исходя из времени
@@ -144,7 +150,10 @@ async def first_step_want_watch_film(message):
         # Получаем жанры фильмов без жанра, который пользователь уже порекомендавал
         type_films_without_type_which_user_select = get_type_films_without_type_which_user_select(message.chat.id)
     # Записываем пользователя в базу данных users если он пишет впервые
-    add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    if 'last_name' in message.chat:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'] + ' ' + message.chat['last_name'])
+    else:
+        add_info_about_user_in_table_users(message.chat.id, message.chat['first_name'])
 
     # 2 шаг
     # Сценарий 1.1 СЦЕНАРИЙ ОПИСАН В ФАЙЛЕ scenarios
